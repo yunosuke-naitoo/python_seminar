@@ -14,3 +14,8 @@ print(b)
 print(type(a))
 print(type(b))
 
+# 文字列の結合
+str1 = 'Python'
+str2 = '入門'
+str3 = str1 + str2
+print(str3)
