@@ -25,13 +25,13 @@ print(x)
 
 # リストのソート
 y = [2, 3, 5 ,6, 1, 2]
-y.sort(reverse=True)
+y.sort()
 y
 # リストを逆順にする
 y.reverse()
 y
 
-#降順にしたい場合
+# 1行で降順にしたい場合
 y.sort(reverse=True)
 
 # タプルの作成
