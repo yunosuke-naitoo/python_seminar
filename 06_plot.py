@@ -32,7 +32,7 @@ ax.legend()
 # pandasでも高度なプロットが出来る
 from pandas import DataFrame
 from pandas import Series
-df = DataFrame(randn(10, 4).cumsum(0), columns=['A', 'N', 'C', 'D'], index=np.arange(0, 100, 10))
+df = DataFrame(randn(10, 4).cumsum(0), columns=['A', 'B', 'C', 'D'], index=np.arange(0, 100, 10))
 df.plot()
 
 # 縦棒グラフと横棒グラフ
