@@ -1,84 +1,55 @@
-from matplotlib import pyplot as plt
-from sklearn import datasets
-
-# bostonデータの読み込み
-boston = datasets.load_boston()
-
-# グラフのサイズ
-plt.figure(figsize=(30, 8))
-
-# 13項目分の散布図を作成
-for i in range(13):
-    # 2×7のグラフを作成
-    plt.subplot(2, 7, i + 1)
-    # 散布図の描画
-    plt.scatter(
-        # 列の全データ
-        boston.data[:, i],
-        # 住宅の価格
-        boston.target,
-        marker = 'o',
-        c = 'b'
-    )
-    # bostonデータセットのカラム名
-    plt.xlabel(boston.feature_names[i])
-    plt.ylabel('house price')
-    plt.autoscale()
-    plt.grid()
-plt.show()
-
-
-
-
-# 平均部屋数(RM)が増えれば、住宅の価格は高くなると読み取った場合
-# 平均部屋数(RM)と住宅の価格の最小二乗法を適応
+from sklearn.datasets import load_iris
 import numpy as np
+import pandas as pd
+iris = load_iris()
 
-# 平均部屋数
-rm = boston.data[:, 5]
-# 住宅の価格
-prices = boston.target
-
-x = np.array([[v, 1] for v in rm])
-y = prices
-(slope, bias), total_error, _, _ = np.linalg.lstsq(x, y)
-
-# グラフの描画
-plt.figure(figsize=(30, 8))
-plt.plot(x[:, 0], slope * x[:, 0] + bias)
-plt.scatter(
-    rm,
-    prices,
-    marker = 'o',
-    c = 'b',
-)
-plt.xlabel(boston.feature_names[5])
-plt.ylabel('house price')
-plt.autoscale()
-plt.grid()
-plt.show()
+iris.keys()
+# 予測しようとしている花の種類
+iris['target_names']
+# 特徴量について
+iris['feature_names']
 
 
-import statsmodels.api as sm
+# 訓練データとテストデータに分ける
+## train_test_split
+# データを並べ替えて、75%を訓練データに、残りの25%を訓練データに分割してくれる
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    iris['data'], iris['target'], random_state=0)
 
-# サンプル数
-nsample = rm.size
+# 訓練データ
+X_train.shape
+y_train.shape
 
-#
-X = np.column_stack((np.repeat(1, nsample), rm))
+# テストデータ
+X_test.shape
+y_test.shape
 
-# 回帰実行
-model = sm.OLS(prices, X)
-results = model.fit()
+# X_trainデータからデータフレームを作成
+iris_df = pd.DataFrame(X_train, columns=iris.feature_names)
+# データの観察
+pd.scatter_matrix(iris_df, c=y_train, hist_kwds={'bins':20})
 
-# 結果のサマリを表示
-print(results.summary())
+# k-最近傍法
+from sklearn.neighbors import KNeighborsClassifier
+# 今回は近傍点の数を1でやってみる
+knn = KNeighborsClassifier(n_neighbors=1)
+# モデル構築するにはfitメソッドを使うだけ.Numpy配列を使うこと
+knn.fit(X_train, y_train)
 
-# パラメータの推定値を取得
-a, b = results.params
 
-# プロット
-plt.plot(rm, prices, 'o')
-plt.plot(rm, a + b * rm)
-plt.show()
+# 予測してみる。以下のような野生のアイリスを見つけたとして、、、
+# ガクの長さ：5cm
+# ガクの幅　：2.9cm
+# 花弁の長さ：1cm
+# 花弁の幅　：0.2cm
+X_new = np.array([[5, 2.9, 1, 0.2]])
+X_new
 
+prediction = knn.predict(X_new)
+prediction
+iris['target_names'][prediction] # setosaと分類された
+
+# この分類結果が正しいのかどうかがわからないため、モデルの評価を行う
+# scoreメソッドで精度を計算してくれる
+knn.score(X_test, y_test)
