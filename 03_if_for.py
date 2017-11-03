@@ -23,5 +23,24 @@ points = {'naito' : 90, 'yamada' : 80, 'tanaka' : 100}
 for name, point in points.items() :
     print(name+'さんの点数は'+str(point)+'点です')
 
+# 処理の後に実行する場合はelseをつける    
+for i in range(10):
+    print(i)
+else:
+    print("end")
 
+# 文字列を1文字ずつ表示する
+for str in "Hello!!":
+    print(str)
 
+# 10回ループしたら処理を停止する
+for i in range(20):
+    if i == 10:
+        break
+    print(i)
+    
+# continueで処理をスキップできる
+for i in range(10):
+    if i % 2 == 0:
+        continue
+    print(i)
